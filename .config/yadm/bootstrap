@@ -3,3 +3,29 @@
 
 sudo pacman -S --needed i3 tldr alacritty  picom feh polybar rofi xfce4-power-manager flameshot imagemagick xclip brightnessctl xorg xorg-xinit ttf-jetbrains-mono bat
 
+#!/usr/bin/env bash
+set -e
+
+echo "🔧 Starting YADM bootstrap setup..."
+
+# --- Step 1: Optimize Manjaro mirrors ---
+echo "Backing up current mirrorlist..."
+sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+
+echo "Updating mirrorlist to the fastest mirrors..."
+sudo pacman-mirrors --fasttrack 10
+
+echo "Refreshing package database..."
+sudo pacman -Syy
+
+echo "✅ Mirrorlist update complete!"
+
+# --- Step 2: Install essential packages (optional) ---
+# Uncomment or add packages you always want installed
+# echo "Installing essential packages..."
+# sudo pacman -S --needed zsh neovim git alacritty htop
+
+# --- Step 3: Set default shell (optional) ---
+# chsh -s /bin/zsh
+
+echo "✨ Bootstrap complete! Enjoy your fresh environment."
