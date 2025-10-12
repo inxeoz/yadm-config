@@ -1,0 +1,79 @@
+# ~/.config/alacritty/alacritty.toml
+# [general]
+# import = [
+#    "~/.config/alacritty/iris.toml"
+# ]
+
+[terminal]
+shell = { program = "/bin/bash", args = ["--login"] }
+
+
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+decorations = "none"                # No window borders
+dynamic_padding = true              # Auto adjusts padding
+opacity = 0.92                      # Transparent terminal
+startup_mode = "Windowed"
+title = "Alacritty"
+
+[window.padding]
+x = 12
+y = 10
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[font]
+normal = { family = "JetBrains Mono", style = "Regular" }
+bold = { family = "JetBrains Mono", style = "Bold" }
+italic = { family = "JetBrains Mono", style = "Italic" }
+size = 12.0
+offset = { x = 0, y = 1 }
+
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+blink_interval = 500
+
+[keyboard]
+bindings = [
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+  { key = "C", mods = "Control|Shift", action = "Copy" },
+  { key = "Q", mods = "Control", action = "Quit" }
+]
+
+
+# iris theme
+
+# Colors (Iris)
+
+# Default colors
+[colors.primary]
+background = '#272537'
+foreground = '#e8e6e9'
+
+# Normal colors
+[colors.normal]
+black   = '#111133'
+red     = '#d61d52'
+green   = '#48a842'
+yellow  = '#e1a51c'
+blue    = '#5556d3'
+magenta = '#8650d3'
+cyan    = '#52afb7'
+white   = '#9f9aa7'
+
+# Bright colors
+[colors.bright]
+black   = '#484867'
+red     = '#e15877'
+green   = '#71ab3a'
+yellow  = '#c6a642'
+blue    = '#6d6dc9'
+magenta = '#956ad3'
+cyan    = '#6ab6bd'
+white   = '#e8e6e9'
