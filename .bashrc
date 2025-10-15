@@ -76,7 +76,8 @@ alias processes='ps aux --sort=-%cpu | head -20'
 alias netstat='ss -tuln'
 alias temps='sensors 2>/dev/null || echo "Install lm-sensors for temperature monitoring"'
 alias syslog='journalctl -f'
-
+alias startx1='startx /usr/bin/i3 -- :0'
+alias startx2='startx /usr/bin/i3 -- :1'
 #######################################
 # Functions (lightweight)
 # Safe wrappers for VS Code / Zed
