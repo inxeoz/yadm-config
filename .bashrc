@@ -45,6 +45,7 @@ export LC_ALL=en_US.UTF-8
 #######################################
 # Aliases (simple, no subshells)
 #######################################
+alias '..'='cd ..'
 alias ls='ls --color=auto --classify'
 alias grep='grep --color=auto'
 alias cdc='cd ~/coding'
@@ -76,8 +77,10 @@ alias processes='ps aux --sort=-%cpu | head -20'
 alias netstat='ss -tuln'
 alias temps='sensors 2>/dev/null || echo "Install lm-sensors for temperature monitoring"'
 alias syslog='journalctl -f'
-alias startx1='startx /usr/bin/i3 -- :0'
-alias startx2='startx /usr/bin/i3 -- :1'
+alias startx0='startx /usr/bin/i3 -- :0'
+alias startx1='startx /usr/bin/i3 -- :1'
+alias startx2='startx /usr/bin/i3 -- :2'
+alias startx3='startx /usr/bin/i3 -- :3'
 #######################################
 # Functions (lightweight)
 # Safe wrappers for VS Code / Zed
