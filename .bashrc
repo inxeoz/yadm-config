@@ -37,6 +37,8 @@ export PATH
 export DENO_INSTALL
 export NVM_DIR="$HOME/.nvm"
 
+export CAPACITOR_ANDROID_STUDIO_PATH="$HOME/.local/share/JetBrains/Toolbox/apps/android-studio/bin/studio.sh"
+
 export LS_COLORS="di=37:*di=*/"
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
