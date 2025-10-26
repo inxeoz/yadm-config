@@ -83,6 +83,8 @@ alias startx0='startx /usr/bin/i3 -- :0'
 alias startx1='startx /usr/bin/i3 -- :1'
 alias startx2='startx /usr/bin/i3 -- :2'
 alias startx3='startx /usr/bin/i3 -- :3'
+
+alias services='systemctl list-unit-files --type=service'
 #######################################
 # Functions (lightweight)
 # Safe wrappers for VS Code / Zed
