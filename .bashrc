@@ -162,5 +162,6 @@ extract() {
 }
 
 
+fastfetch
 
 # End of fast ~/.bashrc
