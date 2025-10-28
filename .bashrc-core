@@ -70,6 +70,7 @@ alias netstat='ss -tuln'
 alias temps='sensors 2>/dev/null || echo "Install lm-sensors for temperature monitoring"'
 alias syslog='journalctl -f'
 alias services='systemctl list-unit-files --type=service'
+alias functions="grep -E '^[a-zA-Z0-9_]+\(\)' ~/.bashrc-core ~/.bashrc-extra"
 
 # ---- VSCode / Zed safety wrappers ----
 code_safe() {
