@@ -63,6 +63,26 @@ renumber_notes() {
   echo "🔢 Notes renumbered."
 }
 
+note() {
+  local num="$1"
+  [[ -z $num ]] && echo "Usage: note <num>" && return 1
+  [[ ! -f $NOTES_FILE ]] && echo "No notes file found!" && return 1
+
+  # Extract note text safely — proper escaping for [ and ]
+  local text
+  text=$(awk -F'{"' -v n="$num" '$0 ~ "^\\[" n "\\]" {sub(/\}$/,"",$2); print $2}' "$NOTES_FILE")
+
+  [[ -z $text ]] && { echo "❌ No note #$num found."; return 1; }
+
+  # Copy to clipboard
+  printf '%s' "$text" | xclip -selection clipboard
+
+  echo "📋 Copied note #$num to clipboard:"
+  echo "   \"$text\""
+}
+
+
+
 
 #######################################
 # Auto-display notes on shell startup
