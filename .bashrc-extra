@@ -42,7 +42,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # ---- Optional: Notes system ----
-NOTES_FILE="$HOME/notes.txt"
+NOTES_FILE="$HOME/.config/notes.txt"
 addnote() {
   mkdir -p "$(dirname "$NOTES_FILE")"; touch "$NOTES_FILE"
   local next_num=$(( $(grep -c '^\[[0-9]\+\]' "$NOTES_FILE") + 1 ))
