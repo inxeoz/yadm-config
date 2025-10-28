@@ -1,0 +1,66 @@
+#######################################
+# ~/.bashrc-extra — Optional tools & extras
+#######################################
+
+# ---- Extract helper ----
+extract() {
+  case "$1" in
+    *.tar.bz2) tar xjf "$1" ;;
+    *.tar.gz)  tar xzf "$1" ;;
+    *.bz2)     bunzip2 "$1" ;;
+    *.rar)     unrar x "$1" ;;
+    *.gz)      gunzip "$1" ;;
+    *.tar)     tar xf "$1" ;;
+    *.tbz2)    tar xjf "$1" ;;
+    *.tgz)     tar xzf "$1" ;;
+    *.zip)     unzip "$1" ;;
+    *.Z)       uncompress "$1" ;;
+    *.7z)      7z x "$1" ;;
+    *)         echo "'$1' cannot be extracted" ;;
+  esac
+}
+
+# ---- Lazy-load nvm ----
+__load_nvm() {
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && unset -f __load_nvm __nvm_proxy
+}
+__nvm_proxy() {
+  unset -f nvm node npm npx
+  __load_nvm
+  command "$@"
+}
+nvm() { __nvm_proxy nvm "$@"; }
+node() { __nvm_proxy node "$@"; }
+npm() { __nvm_proxy npm "$@"; }
+npx() { __nvm_proxy npx "$@"; }
+
+# ---- Fastfetch (visual) ----
+command -v fastfetch &>/dev/null && fastfetch
+
+# ---- SDKMAN (must be at end) ----
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# ---- Optional: Notes system ----
+NOTES_FILE="$HOME/notes.txt"
+addnote() {
+  mkdir -p "$(dirname "$NOTES_FILE")"; touch "$NOTES_FILE"
+  local next_num=$(( $(grep -c '^\[[0-9]\+\]' "$NOTES_FILE") + 1 ))
+  local note="$*"; [ -z "$note" ] && echo "Usage: addnote <text>" && return 1
+  echo "[$next_num]{\"$note\"}" >> "$NOTES_FILE"
+  echo "✅ Note #$next_num added."
+}
+notes() { [ ! -s "$NOTES_FILE" ] && echo "No notes yet!" && return; cat "$NOTES_FILE"; }
+delnote() {
+  local num="$1"; [ -z "$num" ] && echo "Usage: delnote <num>" && return 1
+  sed -i "/^\[$num\]/d" "$NOTES_FILE"
+  echo "🗑️  Deleted note #$num."
+}
+renumber_notes() {
+  awk -F'{\"' 'BEGIN{i=1} NF{print "["i"]{\""$2; i++}' "$NOTES_FILE" > "${NOTES_FILE}.tmp" && mv "${NOTES_FILE}.tmp" "$NOTES_FILE"
+  echo "🔢 Notes renumbered."
+}
+
+#######################################
+# End of ~/.bashrc-extra
+#######################################
