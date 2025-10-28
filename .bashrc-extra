@@ -81,6 +81,20 @@ if [[ $- == *i* ]]; then
 fi
 
 
+xhdmi() {
+    # Get the name of the first connected HDMI output
+    hdmi_output=$(xrandr | awk '/HDMI-[0-9]+ connected/ {print $1; exit}')
+
+    if [ -n "$hdmi_output" ]; then
+        echo "Detected HDMI output: $hdmi_output"
+        echo "Enabling $hdmi_output..."
+        xrandr --output "$hdmi_output" --auto
+    else
+        echo "⚠️  No HDMI device detected."
+    fi
+}
+
+
 #######################################
 # End of ~/.bashrc-extra
 #######################################
