@@ -117,6 +117,15 @@ xhdmi() {
 }
 
 
+
+remindme() {
+  local mins="$1"; shift
+  (sleep "$((mins * 60))" && notify-send "⏰ Reminder" "$*") &
+  echo "🔔 Reminder set for $mins minute(s): $*"
+}
+
+
+
 #######################################
 # End of ~/.bashrc-extra
 #######################################

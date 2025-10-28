@@ -7,6 +7,7 @@
 # ---- Quick helpers ----
 mark() { mkdir -p ~/.marks; ln -snf "$(pwd)" ~/.marks/"$1"; }
 goto() { cd -P "$(readlink ~/.marks/"$1")" || echo "No mark: $1"; }
+marks() { ls -1 ~/.marks; }
 cht() { curl -s "https://cht.sh/$*"; }
 
 # ---- Safe PATH prepend ----
@@ -73,7 +74,7 @@ alias temps='sensors 2>/dev/null || echo "Install lm-sensors for temperature mon
 alias syslog='journalctl -f'
 alias services='systemctl list-unit-files --type=service'
 alias functions="grep -E '^[a-zA-Z0-9_]+\(\)' ~/.bashrc-core ~/.bashrc-extra"
-
+alias serve="python3 -m http.server"
 # ---- VSCode / Zed safety wrappers ----
 code_safe() {
   if [[ "$1" == "/" || "$1" == "/root" ]]; then
