@@ -10,6 +10,7 @@
 
 mark() { mkdir -p ~/.marks; ln -snf "$(pwd)" ~/.marks/"$1"; }
 goto() { cd -P "$(readlink ~/.marks/"$1")" || echo "No mark: $1"; }
+cht() { curl "https://cht.sh/$*"; }
 
 
 
