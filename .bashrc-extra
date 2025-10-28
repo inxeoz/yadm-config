@@ -61,6 +61,26 @@ renumber_notes() {
   echo "🔢 Notes renumbered."
 }
 
+
+#######################################
+# Auto-display notes on shell startup
+#######################################
+print_notes_on_startup() {
+    if [ -s "$NOTES_FILE" ]; then
+        echo -e "\n📘  Your Notes:\n"
+        cat "$NOTES_FILE"
+        echo
+    else
+        echo -e "\n📘  No notes yet — use 'addnote <text>' to create one.\n"
+    fi
+}
+
+# Automatically print notes only in interactive terminals
+if [[ $- == *i* ]]; then
+    print_notes_on_startup
+fi
+
+
 #######################################
 # End of ~/.bashrc-extra
 #######################################
