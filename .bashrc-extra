@@ -125,6 +125,15 @@ remindme() {
 }
 
 
+scp_transfer() {
+  read -p "Remote IP: " ip
+  read -p "Username: " user
+  read -p "Remote file path: " src
+  read -p "Local destination (path/filename): " dest
+  scp "$user@$ip:$src" "$dest"
+}
+
+
 
 #######################################
 # End of ~/.bashrc-extra
