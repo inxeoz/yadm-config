@@ -11,111 +11,95 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 
 ########################################
+# ---- Optional: Notes system (optimized) ----
 ########################################
-# ---- Optional: Notes system (per-file version) ----
-NOTES_DIR="$HOME/.config/inxeoz_notes"  # <- same directory used in your addnote output
 
+NOTES_DIR="$HOME/.config/inxeoz_notes"
+
+# Create the notes directory if missing
+mkdir -p "$NOTES_DIR"
+
+# ---- Add a new note (interactive or direct input) ----
 addnote() {
-  mkdir -p "$NOTES_DIR"
-
-  # Determine next note number
-  local next_num=$(( $(find "$NOTES_DIR" -maxdepth 1 -type f -name '*.note' 2>/dev/null | wc -l) + 1 ))
-  local note_file="$NOTES_DIR/${next_num}.note"
-
-  # Temporary file for safe handling
-  local tmp_file
+  local next_num note_file tmp_file
+  next_num=$(( $(find "$NOTES_DIR" -maxdepth 1 -type f -name '*.note' 2>/dev/null | wc -l) + 1 ))
+  note_file="$NOTES_DIR/${next_num}.note"
   tmp_file=$(mktemp)
 
-  if [ $# -gt 0 ]; then
-    # Direct input mode: user passed text as argument(s)
-    printf "%s\n" "$*" > "$tmp_file"
+  if (( $# )); then
+    printf '%s\n' "$*" > "$tmp_file"
   else
-    # Interactive mode
     echo "📝 Type your note below. Press Ctrl+D when done:"
     cat > "$tmp_file"
   fi
 
-  # Validate content (skip empty input)
-  if [ ! -s "$tmp_file" ]; then
+  if [[ ! -s "$tmp_file" ]]; then
     echo "⚠️  Empty note — nothing saved."
     rm -f "$tmp_file"
     return 1
   fi
 
-  # Save and finalize
   mv "$tmp_file" "$note_file"
   echo "✅ Note #$next_num added → $note_file"
 }
 
-
-
+# ---- List all notes ----
 notes() {
-  mkdir -p "$NOTES_DIR"
-  local files=( "$NOTES_DIR"/*.note )
-  if [ ! -e "${files[0]}" ]; then
+  local files=("$NOTES_DIR"/*.note)
+  if [[ ! -e ${files[0]} ]]; then
     echo "📘  No notes yet — use 'addnote <text>' to create one."
     return
   fi
+
   echo -e "\n📘  Your Notes:\n"
-  for f in $(ls "$NOTES_DIR"/*.note 2>/dev/null | sort -V); do
-    num=$(basename "$f" .note)
-    echo "[$num] $(cat "$f")"
+  for f in "$NOTES_DIR"/*.note; do
+    [[ -e $f ]] || continue
+    printf '[%s] %s\n' "$(basename "$f" .note)" "$(cat "$f")"
   done
   echo
 }
 
+# ---- Delete a note ----
 delnote() {
-  local num="$1"
-  [ -z "$num" ] && echo "Usage: delnote <num>" && return 1
-  local file="$NOTES_DIR/${num}.note"
-  if [ -f "$file" ]; then
-    rm -f "$file"
-    echo "🗑️  Deleted note #$num."
-  else
-    echo "❌ Note #$num not found."
-  fi
+  local num="$1" file="$NOTES_DIR/${1}.note"
+  [[ -z $num ]] && { echo "Usage: delnote <num>"; return 1; }
+  [[ -f $file ]] && { rm -f "$file"; echo "🗑️  Deleted note #$num."; } || echo "❌ Note #$num not found."
 }
 
+# ---- Copy a note to clipboard ----
 note() {
-  local num="$1"
-  [ -z "$num" ] && echo "Usage: note <num>" && return 1
-  local file="$NOTES_DIR/${num}.note"
-  if [ ! -f "$file" ]; then
-    echo "❌ No note #$num found."
-    return 1
-  fi
-  local text
-  text=$(cat "$file")
-  printf '%s' "$text" | xclip -selection clipboard
+  local num="$1" file="$NOTES_DIR/${1}.note"
+  [[ -z $num ]] && { echo "Usage: note <num>"; return 1; }
+  [[ -f $file ]] || { echo "❌ No note #$num found."; return 1; }
+
+  xclip -selection clipboard < "$file"
   echo "📋 Copied note #$num to clipboard:"
-  echo "   \"$text\""
+  sed 's/^/   /' "$file"
 }
 
+# ---- Renumber all notes sequentially ----
 renumber_notes() {
   local i=1
   for f in $(ls "$NOTES_DIR"/*.note 2>/dev/null | sort -V); do
-    mv "$f" "$NOTES_DIR/$i.note"
-    ((i++))
+    mv "$f" "$NOTES_DIR/$((i++)).note"
   done
   echo "🔢 Notes renumbered."
 }
 
 # ---- Auto-display notes on startup ----
 print_notes_on_startup() {
-  if [ "$(find "$NOTES_DIR" -maxdepth 1 -type f -name '*.note' 2>/dev/null | wc -l)" -gt 0 ]; then
+  if find "$NOTES_DIR" -maxdepth 1 -type f -name '*.note' -print -quit | grep -q .; then
     notes
   else
     echo -e "\n📘  No notes yet — use 'addnote <text>' to create one.\n"
   fi
 }
 
-# Automatically print notes only in interactive terminals
-if [[ $- == *i* ]]; then
-  print_notes_on_startup
-fi
+# ---- Display notes only in interactive shells ----
+[[ $- == *i* ]] && print_notes_on_startup
+########################################
+########################################
 
-########################################
-########################################
 
 
 
