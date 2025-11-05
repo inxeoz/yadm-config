@@ -4,103 +4,120 @@
 # ~/.bashrc-extra — Optional tools & extras
 #######################################
 
-# ---- Extract helper ----
-extract() {
-  case "$1" in
-    *.tar.bz2) tar xjf "$1" ;;
-    *.tar.gz)  tar xzf "$1" ;;
-    *.bz2)     bunzip2 "$1" ;;
-    *.rar)     unrar x "$1" ;;
-    *.gz)      gunzip "$1" ;;
-    *.tar)     tar xf "$1" ;;
-    *.tbz2)    tar xjf "$1" ;;
-    *.tgz)     tar xzf "$1" ;;
-    *.zip)     unzip "$1" ;;
-    *.Z)       uncompress "$1" ;;
-    *.7z)      7z x "$1" ;;
-    *)         echo "'$1' cannot be extracted" ;;
-  esac
-}
-
-# ---- Lazy-load nvm ----
-__load_nvm() {
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && unset -f __load_nvm __nvm_proxy
-}
-__nvm_proxy() {
-  unset -f nvm node npm npx
-  __load_nvm
-  command "$@"
-}
-nvm() { __nvm_proxy nvm "$@"; }
-node() { __nvm_proxy node "$@"; }
-npm() { __nvm_proxy npm "$@"; }
-npx() { __nvm_proxy npx "$@"; }
-
-# ---- Fastfetch (visual) ----
-command -v fastfetch &>/dev/null && fastfetch
 
 # ---- SDKMAN (must be at end) ----
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# ---- Optional: Notes system ----
-NOTES_FILE="$HOME/.config/notes.txt"
+
+########################################
+########################################
+# ---- Optional: Notes system (per-file version) ----
+NOTES_DIR="$HOME/.config/inxeoz_notes"  # <- same directory used in your addnote output
+
 addnote() {
-  mkdir -p "$(dirname "$NOTES_FILE")"; touch "$NOTES_FILE"
-  local next_num=$(( $(grep -c '^\[[0-9]\+\]' "$NOTES_FILE") + 1 ))
-  local note="$*"; [ -z "$note" ] && echo "Usage: addnote <text>" && return 1
-  echo "[$next_num]{\"$note\"}" >> "$NOTES_FILE"
-  echo "✅ Note #$next_num added."
+  mkdir -p "$NOTES_DIR"
+
+  # Determine next note number
+  local next_num=$(( $(find "$NOTES_DIR" -maxdepth 1 -type f -name '*.note' 2>/dev/null | wc -l) + 1 ))
+  local note_file="$NOTES_DIR/${next_num}.note"
+
+  # Temporary file for safe handling
+  local tmp_file
+  tmp_file=$(mktemp)
+
+  if [ $# -gt 0 ]; then
+    # Direct input mode: user passed text as argument(s)
+    printf "%s\n" "$*" > "$tmp_file"
+  else
+    # Interactive mode
+    echo "📝 Type your note below. Press Ctrl+D when done:"
+    cat > "$tmp_file"
+  fi
+
+  # Validate content (skip empty input)
+  if [ ! -s "$tmp_file" ]; then
+    echo "⚠️  Empty note — nothing saved."
+    rm -f "$tmp_file"
+    return 1
+  fi
+
+  # Save and finalize
+  mv "$tmp_file" "$note_file"
+  echo "✅ Note #$next_num added → $note_file"
 }
-notes() { [ ! -s "$NOTES_FILE" ] && echo "No notes yet!" && return; cat "$NOTES_FILE"; }
+
+
+
+notes() {
+  mkdir -p "$NOTES_DIR"
+  local files=( "$NOTES_DIR"/*.note )
+  if [ ! -e "${files[0]}" ]; then
+    echo "📘  No notes yet — use 'addnote <text>' to create one."
+    return
+  fi
+  echo -e "\n📘  Your Notes:\n"
+  for f in $(ls "$NOTES_DIR"/*.note 2>/dev/null | sort -V); do
+    num=$(basename "$f" .note)
+    echo "[$num] $(cat "$f")"
+  done
+  echo
+}
+
 delnote() {
-  local num="$1"; [ -z "$num" ] && echo "Usage: delnote <num>" && return 1
-  sed -i "/^\[$num\]/d" "$NOTES_FILE"
-  echo "🗑️  Deleted note #$num."
-}
-renumber_notes() {
-  awk -F'{\"' 'BEGIN{i=1} NF{print "["i"]{\""$2; i++}' "$NOTES_FILE" > "${NOTES_FILE}.tmp" && mv "${NOTES_FILE}.tmp" "$NOTES_FILE"
-  echo "🔢 Notes renumbered."
+  local num="$1"
+  [ -z "$num" ] && echo "Usage: delnote <num>" && return 1
+  local file="$NOTES_DIR/${num}.note"
+  if [ -f "$file" ]; then
+    rm -f "$file"
+    echo "🗑️  Deleted note #$num."
+  else
+    echo "❌ Note #$num not found."
+  fi
 }
 
 note() {
   local num="$1"
-  [[ -z $num ]] && echo "Usage: note <num>" && return 1
-  [[ ! -f $NOTES_FILE ]] && echo "No notes file found!" && return 1
-
-  # Extract note text safely — proper escaping for [ and ]
+  [ -z "$num" ] && echo "Usage: note <num>" && return 1
+  local file="$NOTES_DIR/${num}.note"
+  if [ ! -f "$file" ]; then
+    echo "❌ No note #$num found."
+    return 1
+  fi
   local text
-  text=$(awk -F'{"' -v n="$num" '$0 ~ "^\\[" n "\\]" {sub(/\}$/,"",$2); print $2}' "$NOTES_FILE")
-
-  [[ -z $text ]] && { echo "❌ No note #$num found."; return 1; }
-
-  # Copy to clipboard
+  text=$(cat "$file")
   printf '%s' "$text" | xclip -selection clipboard
-
   echo "📋 Copied note #$num to clipboard:"
   echo "   \"$text\""
 }
 
+renumber_notes() {
+  local i=1
+  for f in $(ls "$NOTES_DIR"/*.note 2>/dev/null | sort -V); do
+    mv "$f" "$NOTES_DIR/$i.note"
+    ((i++))
+  done
+  echo "🔢 Notes renumbered."
+}
 
-
-
-#######################################
-# Auto-display notes on shell startup
-#######################################
+# ---- Auto-display notes on startup ----
 print_notes_on_startup() {
-    if [ -s "$NOTES_FILE" ]; then
-        echo -e "\n📘  Your Notes:\n"
-        cat "$NOTES_FILE"
-        echo
-    else
-        echo -e "\n📘  No notes yet — use 'addnote <text>' to create one.\n"
-    fi
+  if [ "$(find "$NOTES_DIR" -maxdepth 1 -type f -name '*.note' 2>/dev/null | wc -l)" -gt 0 ]; then
+    notes
+  else
+    echo -e "\n📘  No notes yet — use 'addnote <text>' to create one.\n"
+  fi
 }
 
 # Automatically print notes only in interactive terminals
 if [[ $- == *i* ]]; then
-    print_notes_on_startup
+  print_notes_on_startup
 fi
+
+########################################
+########################################
+
+
 
 
 xhdmi() {
