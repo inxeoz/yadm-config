@@ -24,7 +24,6 @@ prepend_path "$HOME/.cargo/bin"
 prepend_path "$HOME/.npm-global/bin"
 prepend_path "$HOME/.nvm"
 prepend_path "$HOME/.bun/bin"
-prepend_path "$HOME/.local/share/gem/ruby/3.4.0/bin"
 
 : "${DENO_INSTALL:=$HOME/.deno}"
 prepend_path "$DENO_INSTALL/bin"
@@ -45,54 +44,19 @@ export LC_ALL=en_US.UTF-8
 alias '..'='cd ..'
 alias ls='ls --color=auto --classify'
 alias grep='grep --color=auto'
-alias cdc='cd ~/coding'
-alias cdd='cd ~/Downloads'
-alias cdt='cd ~/Temp'
+
 alias c='clear'
 alias ui='xprop | grep WM_CLASS'
 alias bat="bat --paging=never --style=plain --theme='OneHalfDark'"
-alias top10='ps aux --sort=-%mem | head -n 10'
-alias myip='curl ifconfig.me'
+
 alias cls='clear; ls'
 alias reload='source ~/.bashrc'
 alias update='sudo pacman -Syuu'
-alias fuck='sudo $(history -p !!)'
 
-alias vf='vim $(fzf)'
-alias cf='code $(fzf)'
-alias zf='zed $(fzf)'
-alias hf='helix $(fzf)'
-
-alias gitd='git diff -- "$(git status --porcelain | fzf | cut -c4-)"'
-alias gitds='git diff --staged "$(git status --porcelain | fzf | cut -c4-)"'
-alias meminfo='free -h'
-alias cpuinfo='lscpu'
-alias diskusage='df -h'
 alias processes='ps aux --sort=-%cpu | head -20'
-alias netstat='ss -tuln'
-alias temps='sensors 2>/dev/null || echo "Install lm-sensors for temperature monitoring"'
-alias syslog='journalctl -f'
-alias services='systemctl list-unit-files --type=service'
-alias functions="grep -E '^[a-zA-Z0-9_]+\(\)' ~/.bashrc-core ~/.bashrc-extra"
-alias serve="python3 -m http.server"
-# ---- VSCode / Zed safety wrappers ----
-code_safe() {
-  if [[ "$1" == "/" || "$1" == "/root" ]]; then
-    echo "❌ Refusing to open $1 in VS Code."
-  else
-     command code "$@"
-  fi
-}
-alias code=code_safe
 
-zed_safe() {
-  if [[ "$1" == "/" || "$1" == "/root" ]]; then
-    echo "❌ Refusing to open $1 in Zed."
-  else
-    command zed "$@"
-  fi
-}
-alias zed=zed_safe
+alias serve="python3 -m http.server"
+
 
 #######################################
 # Prompt — simple & fast
