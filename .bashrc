@@ -12,3 +12,11 @@ fi
 if [ -f "$HOME/.bashrc-extra" ]; then
   source "$HOME/.bashrc-extra"
 fi
+
+
+
+
+# Load optional export (if present)
+if [ -f "$HOME/.bashrc-export" ]; then
+  source "$HOME/.bashrc-export"
+fi
