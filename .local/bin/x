@@ -1,25 +1,32 @@
 #!/bin/bash
-
 # x: run command, show real-time output, save to file, copy output to clipboard at end
+
+# --- detect environment and choose clipboard tool ---
+if [ "$WAYLAND_DISPLAY" ]; then
+    CLIP_CMD="wl-copy"
+elif [ "$DISPLAY" ]; then
+    CLIP_CMD="xclip -selection clipboard"
+else
+    echo "⚠️  No display detected (headless environment). Clipboard copy disabled."
+    CLIP_CMD="cat > /dev/null"
+fi
 
 if [ $# -eq 0 ]; then
     # No arguments → print current path and copy it
     PWD_PATH=$(pwd)
     echo "$PWD_PATH"
-    echo -n "$PWD_PATH" | xclip -selection clipboard
+    echo -n "$PWD_PATH" | $CLIP_CMD
     echo -e "\n📋 Current path copied to clipboard."
     exit 0
 fi
 
 TMP_FILE=$(mktemp)
-trap 'cat "$TMP_FILE" | xclip -selection clipboard; rm -f "$TMP_FILE"; echo -e "\n\n📋 Output copied to clipboard.";' EXIT
+trap 'cat "$TMP_FILE" | $CLIP_CMD; rm -f "$TMP_FILE"; echo -e "\n\n📋 Output copied to clipboard.";' EXIT
 
 if [ $# -eq 1 ]; then
     if [ -f "$1" ]; then
-        # Single argument is a file → cat it
         set -- cat "$1"
     elif [ -d "$1" ]; then
-        # Single argument is a directory → ls it
         set -- ls "$1"
     fi
 fi

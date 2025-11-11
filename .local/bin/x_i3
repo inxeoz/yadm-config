@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# x: run command, show real-time output, save to file, copy output to clipboard at end
+
+if [ $# -eq 0 ]; then
+    # No arguments → print current path and copy it
+    PWD_PATH=$(pwd)
+    echo "$PWD_PATH"
+    echo -n "$PWD_PATH" | xclip -selection clipboard
+    echo -e "\n📋 Current path copied to clipboard."
+    exit 0
+fi
+
+TMP_FILE=$(mktemp)
+trap 'cat "$TMP_FILE" | xclip -selection clipboard; rm -f "$TMP_FILE"; echo -e "\n\n📋 Output copied to clipboard.";' EXIT
+
+if [ $# -eq 1 ]; then
+    if [ -f "$1" ]; then
+        # Single argument is a file → cat it
+        set -- cat "$1"
+    elif [ -d "$1" ]; then
+        # Single argument is a directory → ls it
+        set -- ls "$1"
+    fi
+fi
+
+# Run the command and tee output to both terminal and temp file
+"$@" 2>&1 | tee "$TMP_FILE"
