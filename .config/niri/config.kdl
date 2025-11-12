@@ -139,7 +139,9 @@ layout {
     // preset-window-heights { }
 
     // You can change the default width of the new windows.
-    default-column-width { proportion 0.5; }
+    // default-column-width { proportion 0.5; }
+
+    default-column-width { proportion 1.0; }
     // If you leave the brackets empty, the windows themselves will decide their initial width.
     // default-column-width {}
 
@@ -302,13 +304,13 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // Animation settings.
 // The wiki explains how to configure individual animations:
 // https://yalter.github.io/niri/Configuration:-Animations
-animations {
+// animations {
     // Uncomment to turn off all animations.
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0
-}
+// }
 
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
