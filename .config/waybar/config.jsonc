@@ -23,13 +23,13 @@
         "pulseaudio",
         "network",
         "power-profiles-daemon",
-        "cpu",
+        // "cpu",
         "memory",
-        "temperature",
+        // "temperature",
         "backlight",
         "keyboard-state",
         "battery",
-        "battery#bat2",
+        // "battery#bat2",
         // "custom/power",
         "clock"
 
