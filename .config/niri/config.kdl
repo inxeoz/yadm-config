@@ -216,7 +216,7 @@ layout {
     }
 
     // You can enable drop shadows for windows.
-    shadow {
+    // shadow {
         // Uncomment the next line to enable shadows.
         // on
 
@@ -240,17 +240,17 @@ layout {
         // pixels and match the CSS box-shadow properties.
 
         // Softness controls the shadow blur radius.
-        softness 30
+        // softness 30
 
         // Spread expands the shadow.
-        spread 5
+        // spread 5
 
         // Offset moves the shadow relative to the window.
-        offset x=0 y=5
+        // offset x=0 y=5
 
         // You can also change the shadow color and opacity.
-        color "#0007"
-    }
+        // color "#0007"
+    // }
 
     // Struts shrink the area occupied by windows, similarly to layer-shell panels.
     // You can think of them as a kind of outer gaps. They are set in logical pixels.
@@ -319,6 +319,21 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 // Work around WezTerm's initial configure bug
 // by setting an empty default-column-width.
+
+// # Focused windows (no transparency)
+
+
+window-rule {
+    match is-focused=true
+    opacity 0.9
+}
+
+window-rule {
+    match is-focused=false
+    opacity 0.85
+}
+
+
 window-rule {
     // This regular expression is intentionally made as specific as possible,
     // since this is the default config, and we want no false positives.
