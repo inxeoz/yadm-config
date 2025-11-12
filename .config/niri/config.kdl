@@ -305,13 +305,13 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // Animation settings.
 // The wiki explains how to configure individual animations:
 // https://yalter.github.io/niri/Configuration:-Animations
-// animations {
+animations {
     // Uncomment to turn off all animations.
-    // off
+    off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0
-// }
+}
 
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
@@ -330,7 +330,7 @@ window-rule {
 
 window-rule {
     match is-focused=false
-    opacity 0.85
+    opacity 0.8
 }
 
 
