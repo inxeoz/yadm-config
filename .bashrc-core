@@ -46,7 +46,8 @@ alias ls='ls --color=auto --classify'
 alias grep='grep --color=auto'
 
 alias c='clear'
-alias ui='xprop | grep WM_CLASS'
+# alias ui='xprop | grep WM_CLASS' # for xorg
+alias ui='niri msg pick-window' # for niri
 alias bat="bat --paging=never --style=plain --theme='OneHalfDark'"
 
 alias cls='clear; ls'
