@@ -11,11 +11,13 @@
         "custom/media"
     ],
 
-    "modules-center": [
-        "clock"
-    ],
+    // "modules-center": [
+        // "clock"
+    // ],
 
     "modules-right": [
+
+        "tray",
         "mpd",
         "idle_inhibitor",
         "pulseaudio",
@@ -26,11 +28,11 @@
         "temperature",
         "backlight",
         "keyboard-state",
-        "niri/language",
         "battery",
         "battery#bat2",
-        "tray",
-        "custom/power"
+        // "custom/power",
+        "clock"
+
     ],
 
     // --- MODULES CONFIGURATION ---
@@ -83,7 +85,7 @@
     },
 
     "tray": {
-        "spacing": 10
+        "spacing": 20
     },
 
     "clock": {
