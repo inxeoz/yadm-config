@@ -275,6 +275,7 @@ spawn-at-startup "waybar"
 
 spawn-at-startup "clipman"
 
+spawn-at-startup "mako"
 
 // spawn-at-startup "waybar"
 // spawn-at-startup "waybar"
@@ -622,6 +623,11 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 
     Alt+Space { spawn-sh "rofi -show drun"; }
+    
+    Ctrl+Alt+R {
+    spawn-sh "pkill swaybg; FILE=\"$(find ~/Wallpaper -type f \\( -iname '*.jpg' -o -iname '*.png' -o -iname '*.jpeg' -o -iname '*.webp' \\) | shuf -n 1)\"; swaybg -i \"$FILE\" -m fill & notify-send 'Niri reloaded' \"Wallpaper: $(basename \"$FILE\")\"; niri msg action load-config-file"
+}
 
+    
 
 }
