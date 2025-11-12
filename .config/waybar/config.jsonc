@@ -1,14 +1,13 @@
 // -*- mode: jsonc -*-
 {
     "position" : "bottom",
-    "height": 30,
-    "spacing": 4,
+    "height": 26,
+    "spacing": 10,
 
     // Adjust module order for Niri
     "modules-left": [
         "niri/workspaces",
-        "niri/window",
-        "custom/media"
+        "niri/window"
     ],
 
     // "modules-center": [
@@ -16,23 +15,19 @@
     // ],
 
     "modules-right": [
-
-        "tray",
-        "mpd",
-        "idle_inhibitor",
         "pulseaudio",
+        "custom/separator",
         "network",
-        "power-profiles-daemon",
-        // "cpu",
+        "custom/separator",
         "memory",
-        // "temperature",
-        "backlight",
+        "custom/separator",
         "keyboard-state",
+        "custom/separator",
+        "backlight",
+        "custom/separator",
         "battery",
-        // "battery#bat2",
-        // "custom/power",
+        "custom/separator",
         "clock"
-
     ],
 
     // --- MODULES CONFIGURATION ---
@@ -54,7 +49,7 @@
     },
 
     "keyboard-state": {
-        "numlock": true,
+        "numlock": false,
         "capslock": true,
         "format": "{name} {icon}",
         "format-icons": {
@@ -84,9 +79,9 @@
         }
     },
 
-    "tray": {
-        "spacing": 20
-    },
+    // "tray": {
+    //     "spacing": 20
+    // },
 
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
@@ -169,6 +164,11 @@
             "default": ["", "", ""]
         },
         "on-click": "pavucontrol"
+    },
+
+    "custom/separator": {
+        "format": "|",
+        "tooltip": false
     },
 
     "custom/media": {
