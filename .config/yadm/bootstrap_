@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 sudo pacman -S --needed \
 i3 tldr alacritty  picom \
