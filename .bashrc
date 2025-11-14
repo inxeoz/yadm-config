@@ -20,3 +20,21 @@ fi
 if [ -f "$HOME/.bashrc-export" ]; then
   source "$HOME/.bashrc-export"
 fi
+
+
+
+# Detect Wayland/Niri vs Xorg/Startx
+
+if [ "$XDG_CURRENT_DESKTOP" = "niri" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    # Niri session
+    if [ -f ~/.bashrc_niri ]; then
+        source ~/.bashrc_niri
+    fi
+
+elif [ "$XDG_SESSION_TYPE" = "x11" ]; then
+    # Startx / Xorg session
+    if [ -f ~/.bashrc_x ]; then
+        source ~/.bashrc_x
+    fi
+fi
+
