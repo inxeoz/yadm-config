@@ -1,26 +1,23 @@
 #!/usr/bin/env bash
 set -e
 
-echo "🔧 Starting YADM bootstrap setup on Arch Linux..."
+echo "🔧 Starting YADM bootstrap for PURE ARCH..."
 
 # --- Step 1: Refresh package database ---
-echo "Refreshing package database..."
+echo "⏳ Refreshing pacman database..."
 sudo pacman -Syy
 
-# --- Step 2: Install essential packages ---
-echo "📦 Installing packages..."
+# --- Step 2: Install required packages based on your dotfiles ---
+echo "📦 Installing required packages..."
 sudo pacman -S --needed \
-    i3 tldr alacritty picom \
-    feh polybar rofi xfce4-power-manager \
+    xorg xorg-xinit xorg-xrandr \
+    i3-wm i3status i3lock \
+    polybar picom \
+    kitty alacritty \
+    feh rofi \
+    xfce4-power-manager \
     flameshot imagemagick xclip brightnessctl \
-    xorg xorg-xinit  \
-    ttf-jetbrains-mono bat
+    helix tldr bat \
+    noto-fonts ttf-jetbrains-mono
 
-# xorg-xrandr
-echo "✨ Package installation complete!"
-
-# --- Step 3: Optional default shell ---
-# echo "Changing default shell to zsh..."
-# chsh -s /bin/zsh
-
-echo "🎉 Bootstrap complete! Enjoy your fresh Arch environment!"
+echo "✨ Base packages installed!"
