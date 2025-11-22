@@ -13,9 +13,10 @@ sudo pacman -S --needed \
     i3 tldr alacritty picom \
     feh polybar rofi xfce4-power-manager \
     flameshot imagemagick xclip brightnessctl \
-    xorg xorg-xinit xorg-xrandr \
+    xorg xorg-xinit  \
     ttf-jetbrains-mono bat
 
+# xorg-xrandr
 echo "✨ Package installation complete!"
 
 # --- Step 3: Optional default shell ---
